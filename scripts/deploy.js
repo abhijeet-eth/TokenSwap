@@ -7,23 +7,26 @@
 const hre = require("hardhat");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+    const USDC = await hre.ethers.getContractFactory("USDC");
+    const usdc = await USDC.deploy(1000000000000);
 
-  const lockedAmount = hre.ethers.utils.parseEther("1");
+    await usdc.deployed();
 
-  const Lock = await hre.ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+    console.log("USDC deployed to:", usdc.address);
 
-  await lock.deployed();
+    const INRC = await hre.ethers.getContractFactory("INRC");
+    const inrc = await INRC.deploy("INRC", "INR", usdc.address);
 
-  console.log("Lock with 1 ETH deployed to:", lock.address);
+    await inrc.deployed();
+
+    console.log("INRC deployed to:", inrc.address);
+    let exchange = await inrc.exe();
+    console.log("Exchange deployed to:", exchange);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
+    console.error(error);
+    process.exitCode = 1;
 });
