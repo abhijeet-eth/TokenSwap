@@ -307,7 +307,7 @@ function App() {
                         <div class="card" style={{ width: "18rem;" }}>
                             <div class="card-body">
                                 <h5 class="card-title">Redemption</h5>
-                                <p class="card-text">Users can swap their token for ETH </p>
+                                <p class="card-text">Redemption fees: 0.5% </p>
 
                                 <form className="input" onSubmit={redeemToken}>
                                     <input id='tokenIn' value={tokenInput2} onChange={(event) => setTokenInput2(event.target.value)} type='text' placeholder="Amount of Token to redeem" />
