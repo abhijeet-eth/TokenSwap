@@ -6,9 +6,9 @@ import USDC_ABI from "./USDC.json"
 import INRC_ABI from "./INRC.json"
 
 function App() {
-    let contractAddress = "0xFdCe3f63a2E690C010e258cBC57a1855A60F2120"; //rinkeby
-    let USDCContract = "0x0cf74888e8F5cCC5E221624c46BF2D0CA5B5D414";
-    let INRCContract = "0x00C7f518Cd95cBf84D2532C57e2Cce89b0aEbbAE";
+    let contractAddress = "0x73fa489D8d793f68D6198F8DF5F6194a7D72eB9A"; //rinkeby
+    let USDCContract = "0xC393227A49f3B23768d77fbe40340faE2800C60B";
+    let INRCContract = "0xE22DBAA36084205AB68173dA25958C1ef54aBf94";
 
     let [blockchainProvider, setBlockchainProvider] = useState(undefined);
     let [metamask, setMetamask] = useState(undefined);
@@ -30,6 +30,7 @@ function App() {
     const [USDCBal, setUSDCBal] = useState(null);
     const [tokenInput, setTokenInput] = useState(null);
     const [tokenInput2, setTokenInput2] = useState(null);
+    const [tokenInput3, setTokenInput3] = useState(null);
     const [address, setAddress] = useState(null);
     const [address2, setAddress2] = useState(null);
 
@@ -266,6 +267,11 @@ function App() {
         await writeContract.transferFeesToOwner({ gasLimit: 500000 });
     }
 
+    const mintUSDC = async (amt) => {
+        amt = ethers.utils.parseEther(amt)
+        await USDC2.mintUSDC(amt)
+    }
+
     if (isError) {
         return (
             <>
@@ -303,6 +309,25 @@ function App() {
 
 
                     </div>
+
+                    <div class="col-sm">
+
+                        <div class="card" style={{ width: "18rem;" }}>
+                            <div class="card-body">
+                                <h5 class="card-title">Mint USDC</h5>
+                                <p class="card-text">Mint USDC (for testing)</p>
+                                <form className="input" onSubmit={mintUSDC}>
+                                    <input id='tokenIn' value={tokenInput3} onChange={(event) => setTokenInput3(event.target.value)} type='text' placeholder="Token amount " />
+                                    <button type="button" className="btn btn-primary btn-sm" onClick={() => mintUSDC(tokenInput3)}> Mint </button>
+
+                                </form>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
                     <div class="col-sm">
                         <div class="card" style={{ width: "18rem;" }}>
                             <div class="card-body">
