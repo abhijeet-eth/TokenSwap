@@ -8,7 +8,7 @@ const hre = require("hardhat");
 
 async function main() {
     const USDC = await hre.ethers.getContractFactory("USDC");
-    const usdc = await USDC.deploy(1000000000000);
+    const usdc = await USDC.deploy("100000000000000000000000");
 
     await usdc.deployed();
 

@@ -3,11 +3,12 @@ import Exchange from './Exchange.json';
 import { ethers } from "ethers";
 import './App.css';
 import USDC_ABI from "./USDC.json"
+import INRC_ABI from "./INRC.json"
 
 function App() {
-    let contractAddress = "0xE04fA508CF1017B6dece32c450588A66Ca6282a8"; //ropsten
-    // 0x8e326104B8171fc1EB7A96905eC5d7CFcC3aaE37 rinkeby
-    let DAIContract = "0x31F42841c2db5173425b5223809CF3A38FEde360";
+    let contractAddress = "0xFdCe3f63a2E690C010e258cBC57a1855A60F2120"; //rinkeby
+    let USDCContract = "0x0cf74888e8F5cCC5E221624c46BF2D0CA5B5D414";
+    let INRCContract = "0x00C7f518Cd95cBf84D2532C57e2Cce89b0aEbbAE";
 
     let [blockchainProvider, setBlockchainProvider] = useState(undefined);
     let [metamask, setMetamask] = useState(undefined);
@@ -29,6 +30,8 @@ function App() {
     const [USDCBal, setUSDCBal] = useState(null);
     const [tokenInput, setTokenInput] = useState(null);
     const [tokenInput2, setTokenInput2] = useState(null);
+    const [address, setAddress] = useState(null);
+    const [address2, setAddress2] = useState(null);
 
 
     let alertMessage;
@@ -61,7 +64,7 @@ function App() {
                         console.error(err);
                     }
                 }
-                provider = new ethers.providers.JsonRpcProvider(`https://ropsten.infura.io/v3/c811f30d8ce746e5a9f6eb173940e98a`)
+                provider = new ethers.providers.JsonRpcProvider(`https://rinkeby.infura.io/v3/c811f30d8ce746e5a9f6eb173940e98a`)
                 //const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545")
                 setBlockchainProvider(provider);
                 network = await provider.getNetwork()
@@ -210,17 +213,11 @@ function App() {
         const tokenBal = await USDC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
-        let allowances = String(await USDC.allowance(signerAddress, contractAddress));
 
-        // // allowances = ethers.utils.formatEther(allowances);
-        amountIn = String(ethers.utils.parseEther(amountIn));
-
-        if (allowances < amountIn) {
-            await USDC2.approve(contractAddress, tokenBal, { from: signerAddress })
-        }
+        await USDC2.approve(contractAddress, tokenBal, { from: signerAddress })
 
         amountIn = ethers.utils.parseEther(amountIn);
-        await contract.mint(amountIn);
+        await writeContract.mint(amountIn);
 
     }
 
@@ -232,37 +229,41 @@ function App() {
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
 
-        await USDC2.approve(contractAddress, tokenBal, { from: signerAddress })
+        await USDC2.approve(contractAddress, tokenBal, { from: signerAddress, gasLimit: 500000 })
 
 
         const inrcBal = await INRC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(inrcBal))
 
-        await INRC.approve(contractAddress, inrcBal, { from: signerAddress })
+        await INRC2.approve(contractAddress, inrcBal, { from: signerAddress, gasLimit: 500000 })
 
 
         amountOut = String(ethers.utils.parseEther(amountOut));
-        await contract.redeem(amountOut);
+        await writeContract.redeem(amountOut);
 
     }
 
-    const INR_Balance = async () => {
-        const signerAddress = await metamaskSigner.getAddress();
-        let val = await contract.INR_BalanceOf({ from: signerAddress });
+    const INR_Balance = async (addr) => {
+        // const signerAddress = await metamaskSigner.getAddress();
+        let val = await contract.INR_BalanceOf(addr);
 
         val = String(ethers.utils.formatEther(val));
         console.log(String(val))
         setInrBal(val)
     }
 
-    const USDC_Balance = async () => {
+    const USDC_Balance = async (addr) => {
         const signerAddress = await metamaskSigner.getAddress();
-        let val = await contract.USDC_BalanceOf({ from: signerAddress });
+        let val = await contract.USDC_BalanceOf(addr);
 
         val = String(ethers.utils.formatEther(val));
         console.log(String(val))
         setUSDCBal(val)
+    }
+
+    const transferUSDCToOwner = async () => {
+        await writeContract.transferFeesToOwner({ gasLimit: 500000 });
     }
 
     if (isError) {
@@ -293,7 +294,7 @@ function App() {
                                 <p class="card-text">Provide USDC and get INR token in 1:80 ratio</p>
                                 <form className="input" onSubmit={mintToken}>
                                     <input id='tokenIn' value={tokenInput} onChange={(event) => setTokenInput(event.target.value)} type='text' placeholder="Token amount " />
-                                    <button type="button" className="btn btn-primary btn-sm" onClick={() => setInrBal(tokenInput)}> Get Output </button>
+                                    <button type="button" className="btn btn-primary btn-sm" onClick={() => mintToken(tokenInput)}> Mint </button>
 
                                 </form>
                             </div>
@@ -313,6 +314,11 @@ function App() {
                                     <button type="button" className="btn btn-primary btn-sm" onClick={() => redeemToken(tokenInput2)}> Redeem </button>
 
                                 </form>
+                                <br />
+                                <form className="input" onSubmit={transferUSDCToOwner}>
+                                    <button type="button" className="btn btn-primary btn-sm" onClick={() => transferUSDCToOwner()}> Transfer Fees to Owner </button>
+
+                                </form>
                                 <div className="font-weight-normal">
                                 </div>
 
@@ -323,10 +329,12 @@ function App() {
                     <div class="col-sm">
                         <div class="card" style={{ width: "18rem;" }}>
                             <div class="card-body" >
-                                <button type="button" className="btn btn-primary btn-sm" onClick={() => INR_Balance()}> INR Bal </button>
+                                <input id='tokenIn' value={address} onChange={(event) => setAddress(event.target.value)} type='text' placeholder="Address" />
+                                <button type="button" className="btn btn-primary btn-sm" onClick={() => INR_Balance(address)}> INR Bal </button>
                                 {inrBal}
                                 <br /> <br />
-                                <button type="button" className="btn btn-primary btn-sm" onClick={() => USDC_Balance()}> USDC Bal </button>
+                                <input id='tokenIn' value={address2} onChange={(event) => setAddress2(event.target.value)} type='text' placeholder="Address" />
+                                <button type="button" className="btn btn-primary btn-sm" onClick={() => USDC_Balance(address2)}> USDC Bal </button>
                                 {USDCBal}
                                 <br /> <br />
                                 <div className="font-italic">
@@ -334,7 +342,7 @@ function App() {
                                 </div>
                                 <br />
                                 <div className="font-italic">
-                                    <h6>DAI address(Input Token):</h6> {DAIContract}
+                                    <h6>USDC address(Input Token):</h6> {USDCContract}
                                 </div>
 
                             </div>

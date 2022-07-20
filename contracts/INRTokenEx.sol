@@ -11,7 +11,7 @@ interface IINRC is IERC20 {
 
     function getExchangeRate() external view returns(uint);
 
-    function burn(uint _amount) external;
+    function burn(address from, uint _amount) external;
 
 }
 
@@ -20,12 +20,20 @@ contract Exchange {
     IINRC inr;
     USDC usdc;
     uint exchangeRate;
+    address immutable owner;
 
-    mapping (address => uint) public USDCRegistry;
+    mapping (address => uint) public contractUSDCRegistry; //Contract USDC amount as fees stored in contract 
+    mapping (address => uint) public userUSDCRegistry; //USDC amount of user stored in contract
 
     constructor(address _usdc) {
         inr = IINRC(msg.sender);
         usdc = USDC(_usdc);
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner(){
+        require(msg.sender == owner, "Not owner");
+        _;
     }
 
     function mint(uint usdcAmount) external {
@@ -33,7 +41,7 @@ contract Exchange {
         exchangeRate = inr.getExchangeRate();
         uint inrcAmount = usdcAmount * exchangeRate;
 
-        USDCRegistry[msg.sender] += usdcAmount;
+        userUSDCRegistry[msg.sender] += usdcAmount;
         
         bool success = usdc.transferFrom(msg.sender, address(this), usdcAmount);
         require(success, "Could not transfer token. Missing approval?");
@@ -43,18 +51,22 @@ contract Exchange {
     function redeem(uint inrcAmount) external {
         uint usdcAmount = inrcAmount / inr.getExchangeRate();
 
-        USDCRegistry[msg.sender] -= usdcAmount;
+        userUSDCRegistry[msg.sender] -= usdcAmount;
 
-        uint fees = (usdcAmount * 5)/1000;  //0.5% fees in USDC
+        uint fees = (usdcAmount * 5)/1000;  //0.5% Redemption fees in USDC
         uint restAmount = usdcAmount - fees; //99.5% rest USDC amount
         
         bool success = usdc.transferFrom(msg.sender, address(this), fees);
         require(success, "Could not transfer token. Missing approval?");
 
+        contractUSDCRegistry[address(this)] += fees;
+
+        usdc.approve(address(this), restAmount);
+
         bool success2 = usdc.transferFrom(address(this), msg.sender, restAmount);
         require(success2, "Could not transfer token. Missing approval?");
 
-        inr.burn(inrcAmount);
+        inr.burn(msg.sender, inrcAmount); //redeemed INRC token burnt
     }
 
     // function getINRTokenBalance() external view returns
@@ -65,7 +77,12 @@ contract Exchange {
 
 
     function USDC_BalanceOf(address account) public view returns (uint256) {
-        return USDCRegistry[account];
+        return userUSDCRegistry[account];
+    }
+
+    function transferFeesToOwner() external onlyOwner {
+        contractUSDCRegistry[address(this)] = 0;
+        usdc.transfer(owner, usdc.balanceOf(address(this)));
     }
 
 }
@@ -91,8 +108,8 @@ contract INRC is ERC20 {
         _mint(recipient, inrcAmount);
     }
 
-    function burn(uint _amount) external {
-        _burn(msg.sender, _amount);
+    function burn(address from, uint _amount) external {
+        _burn(from, _amount);
     }
 
     function getExchangeRate() external pure returns(uint) {

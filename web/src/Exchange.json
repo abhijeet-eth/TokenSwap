@@ -33,11 +33,11 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "",
+          "name": "account",
           "type": "address"
         }
       ],
-      "name": "USDCRegistry",
+      "name": "USDC_BalanceOf",
       "outputs": [
         {
           "internalType": "uint256",
@@ -52,11 +52,11 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "account",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "USDC_BalanceOf",
+      "name": "contractUSDCRegistry",
       "outputs": [
         {
           "internalType": "uint256",
@@ -91,6 +91,32 @@
       "name": "redeem",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "transferFeesToOwner",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "userUSDCRegistry",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     }
   ]
