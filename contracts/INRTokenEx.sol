@@ -91,6 +91,10 @@ contract Exchange {
         usdc.transfer(msg.sender, fees);
     }
 
+    function getFees() external view returns(uint){
+        return feesRegistry[address(this)];
+    } 
+
 }
 
 /**

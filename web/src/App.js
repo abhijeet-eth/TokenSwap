@@ -6,9 +6,9 @@ import USDC_ABI from "./USDC.json"
 import INRC_ABI from "./INRC.json"
 
 function App() {
-    let contractAddress = "0xF7f7Ca31ca84434F5b14880fE9579f921DB02FE0"; //rinkeby
-    let USDCContract = "0xcD002E16fBc7E5e94A31bfe0393Ef6274C9eef3f";
-    let INRCContract = "0x644c4BFeD7758D7bd66eAFc7602528b024b970fE";
+    let contractAddress = "0x11b9cbD9527988661D572021B8BE3eF315707920"; //rinkeby
+    let USDCContract = "0x223709F64aD9067507b72706e88447aFF03885fA";
+    let INRCContract = "0x4be6F12D5B7846bF0d1819DbED17c3322691777e";
 
     let [blockchainProvider, setBlockchainProvider] = useState(undefined);
     let [metamask, setMetamask] = useState(undefined);
@@ -275,7 +275,7 @@ function App() {
     }
 
     const getFees = async () => {
-        let val = await contract.fees();
+        let val = await contract.getFees();
         setDisplayFees(val);
     }
 
