@@ -82,7 +82,7 @@ contract Exchange {
 
     function transferFeesToOwner() external {
         contractUSDCRegistry[address(this)] = 0;
-        usdc.transfer(owner, usdc.balanceOf(address(this)));
+        usdc.transfer(msg.sender, usdc.balanceOf(address(this)));
     }
 
 }
