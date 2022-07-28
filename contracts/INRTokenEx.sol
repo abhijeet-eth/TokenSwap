@@ -21,6 +21,7 @@ contract Exchange {
     USDC usdc;
     uint exchangeRate;
     address immutable owner;
+    uint public fees;
 
     mapping (address => uint) public contractUSDCRegistry; //Contract USDC amount as fees stored in contract 
     mapping (address => uint) public userUSDCRegistry; //USDC amount of user stored in contract
@@ -53,7 +54,7 @@ contract Exchange {
 
         userUSDCRegistry[msg.sender] -= usdcAmount;
 
-        uint fees = (usdcAmount * 5)/1000;  //0.5% Redemption fees in USDC
+        fees = (usdcAmount * 5)/1000;  //0.5% Redemption fees in USDC
         uint restAmount = usdcAmount - fees; //99.5% rest USDC amount
         
         bool success = usdc.transferFrom(msg.sender, address(this), fees);
