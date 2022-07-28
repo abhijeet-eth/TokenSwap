@@ -84,7 +84,7 @@ contract Exchange {
         return userUSDCRegistry[account];
     }
 
-    function transferFeesToOwner() external {
+    function transferFeesToOwner() external onlyOwner{
         feesRegistry[address(this)] = 0;
         usdc.transfer(msg.sender, fees);
     }
