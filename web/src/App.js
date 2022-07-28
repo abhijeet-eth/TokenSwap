@@ -6,9 +6,9 @@ import USDC_ABI from "./USDC.json"
 import INRC_ABI from "./INRC.json"
 
 function App() {
-    let contractAddress = "0x56834B5a1e46c43373f71fdfcA0ea0FCCE2C7d0f"; //rinkeby
-    let USDCContract = "0x32989c1aecCb1e6831aFF2dE262844ABE076f1A3";
-    let INRCContract = "0xCd3e6B47f76D8cc237387559CA8af8b6905BcF36";
+    let contractAddress = "0x8c9218ed77f75B438c260423CbFDF1fb6EACB984"; //rinkeby
+    let USDCContract = "0x0E603afa196d729ce721C8F19280f0e18DB3eE05";
+    let INRCContract = "0x0E83369D1ED34D4E7F354755a9bdc92b87e5E6F6";
 
     let [blockchainProvider, setBlockchainProvider] = useState(undefined);
     let [metamask, setMetamask] = useState(undefined);

@@ -15,6 +15,11 @@
           "internalType": "address",
           "name": "_usdc",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_owner",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -139,6 +144,11 @@
     },
     {
       "inputs": [
+        {
+          "internalType": "address",
+          "name": "from",
+          "type": "address"
+        },
         {
           "internalType": "uint256",
           "name": "_amount",
