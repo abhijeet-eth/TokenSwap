@@ -33,6 +33,7 @@ function App() {
     const [tokenInput3, setTokenInput3] = useState(null);
     const [address, setAddress] = useState(null);
     const [address2, setAddress2] = useState(null);
+    const [displayFees, setDisplayFees] = useState(null);
 
 
     let alertMessage;
@@ -273,6 +274,11 @@ function App() {
         await USDC2.mintUSDC(amt)
     }
 
+    const getFees = async () => {
+        let val = await contract.fees();
+        setDisplayFees(val);
+    }
+
     if (isError) {
         return (
             <>
@@ -363,6 +369,8 @@ function App() {
                                 <button type="button" className="btn btn-primary btn-sm" onClick={() => USDC_Balance(address2)}> USDC Bal </button>
                                 {USDCBal}
                                 <br /> <br />
+                                <button type="button" className="btn btn-primary btn-sm" onClick={() => getFees()}> Fees </button>
+                                {displayFees}
                                 <div className="font-italic">
                                     <h6>Contract Address:</h6> {contractAddress}
                                 </div>
