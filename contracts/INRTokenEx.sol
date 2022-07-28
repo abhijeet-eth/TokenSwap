@@ -25,6 +25,7 @@ contract Exchange {
 
     mapping (address => uint) public contractUSDCRegistry; //Contract USDC amount as fees stored in contract 
     mapping (address => uint) public userUSDCRegistry; //USDC amount of user stored in contract
+    mapping (address => uint) public feesRegistry; //Total Fees accumulated
 
     constructor(address _usdc) {
         inr = IINRC(msg.sender);
@@ -56,6 +57,8 @@ contract Exchange {
 
         fees = (usdcAmount * 5)/1000;  //0.5% Redemption fees in USDC
         uint restAmount = usdcAmount - fees; //99.5% rest USDC amount
+
+        feesRegistry[address(this)] += fees;
         
         bool success = usdc.transferFrom(msg.sender, address(this), fees);
         require(success, "Could not transfer token. Missing approval?");
@@ -82,7 +85,7 @@ contract Exchange {
     }
 
     function transferFeesToOwner() external {
-        contractUSDCRegistry[address(this)] = 0;
+        feesRegistry[address(this)] = 0;
         usdc.transfer(msg.sender, fees);
     }
 
