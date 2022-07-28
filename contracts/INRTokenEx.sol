@@ -84,7 +84,9 @@ contract Exchange {
         return userUSDCRegistry[account];
     }
 
-    function transferFeesToOwner() external onlyOwner{
+    function transferFeesToOwner() external{
+        require(fees > 0, "No fees to claim");
+        require(msg.sender == owner, "Not owner");
         feesRegistry[address(this)] = 0;
         usdc.transfer(msg.sender, fees);
     }
