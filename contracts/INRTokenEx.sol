@@ -22,8 +22,7 @@ contract Exchange {
     uint exchangeRate;
     address immutable owner;
     uint public fees;
-
-    mapping (address => uint) public contractUSDCRegistry; //Contract USDC amount as fees stored in contract 
+ 
     mapping (address => uint) public userUSDCRegistry; //USDC amount of user stored in contract
     mapping (address => uint) public feesRegistry; //Total Fees accumulated
 
@@ -63,8 +62,6 @@ contract Exchange {
         bool success = usdc.transferFrom(msg.sender, address(this), fees);
         require(success, "Could not transfer token. Missing approval?");
 
-        contractUSDCRegistry[address(this)] += fees;
-
         usdc.approve(address(this), restAmount);
 
         bool success2 = usdc.transferFrom(address(this), msg.sender, restAmount);
@@ -85,8 +82,11 @@ contract Exchange {
     }
 
     function transferFeesToOwner() external {
+        require(fees > 0 , "No fees to send");
         feesRegistry[address(this)] = 0;
-        usdc.transfer(msg.sender, fees);
+        uint amt = fees;
+        fees = 0;
+        usdc.transfer(msg.sender, amt);
     }
 
 }
