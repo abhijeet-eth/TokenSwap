@@ -218,7 +218,7 @@ function App() {
         await USDC2.approve(contractAddress, tokenBal, { from: signerAddress })
 
         amountIn = ethers.utils.parseEther(amountIn);
-        await writeContract.mint(amountIn, {gasLimit:50000});
+        await writeContract.mint(amountIn, {gasLimit:500000});
 
     }
 
