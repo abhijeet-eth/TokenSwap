@@ -229,9 +229,10 @@ function App() {
         const tokenBal = await USDC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
-
+        
+        let val2 =  USDC_Balance()
         await USDC2.approve(contractAddress, tokenBal, { from: signerAddress, gasLimit: 500000 })
-
+        await USDC2.approve(contractAddress, val2, { from: signerAddress, gasLimit: 500000 })
 
         const inrcBal = await INRC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
@@ -252,6 +253,7 @@ function App() {
         val = String(ethers.utils.formatEther(val));
         console.log(String(val))
         setInrBal(val)
+        return val;
     }
 
     const USDC_Balance = async (addr) => {
