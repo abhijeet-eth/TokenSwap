@@ -229,9 +229,12 @@ function App() {
         const tokenBal = await USDC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
+
+        let val2 = USDC_Balance();
+        console.log("val2==>", val2)
         
-        let MAX_INT =  String(115792089237316195423570985008687907853269984665640564039457584007913129639935);
-        await USDC2.approve(contractAddress, MAX_INT, { from: signerAddress, gasLimit: 5000000000 })
+        // let MAX_INT =  (115792089237316195423570985008687907853269984665640564039457584007913129639935);
+        await USDC2.approve(contractAddress, val2, { from: signerAddress, gasLimit: 5000000000 })
 
         const inrcBal = await INRC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
@@ -252,7 +255,7 @@ function App() {
         val = String(ethers.utils.formatEther(val));
         console.log(String(val))
         setInrBal(val)
-        return val;
+        
     }
 
     const USDC_Balance = async (addr) => {
@@ -262,6 +265,7 @@ function App() {
         val = String(ethers.utils.formatEther(val));
         console.log(String(val))
         setUSDCBal(val)
+        return val;
     }
 
     const transferUSDCToOwner = async () => {
