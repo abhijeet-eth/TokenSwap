@@ -27,6 +27,7 @@ contract Exchange {
     mapping (address => uint) public userUSDCRegistry; //USDC amount of user stored in contract
     mapping (address => uint) public feesRegistry; //Total Fees accumulated
 
+    event FeesUpdated(address, uint);
     constructor(address _usdc, address _owner) {
         inr = IINRC(msg.sender);
         usdc = USDC(_usdc);
@@ -57,6 +58,8 @@ contract Exchange {
 
         fees = (usdcAmount * 5)/1000;  //0.5% Redemption fees in USDC
         uint restAmount = usdcAmount - fees; //99.5% rest USDC amount
+
+        emit FeesUpdated(msg.sender, fees);       
 
         feesRegistry[address(this)] += fees;
         
