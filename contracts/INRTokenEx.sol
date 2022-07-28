@@ -22,14 +22,15 @@ contract Exchange {
     uint exchangeRate;
     address immutable owner;
     uint public fees;
- 
+
+    mapping (address => uint) public contractUSDCRegistry; //Contract USDC amount as fees stored in contract 
     mapping (address => uint) public userUSDCRegistry; //USDC amount of user stored in contract
     mapping (address => uint) public feesRegistry; //Total Fees accumulated
 
-    constructor(address _usdc) {
+    constructor(address _usdc, address _owner) {
         inr = IINRC(msg.sender);
         usdc = USDC(_usdc);
-        owner = msg.sender;
+        owner = _owner;
     }
 
     modifier onlyOwner(){
@@ -62,6 +63,8 @@ contract Exchange {
         bool success = usdc.transferFrom(msg.sender, address(this), fees);
         require(success, "Could not transfer token. Missing approval?");
 
+        contractUSDCRegistry[address(this)] += fees;
+
         usdc.approve(address(this), restAmount);
 
         bool success2 = usdc.transferFrom(address(this), msg.sender, restAmount);
@@ -82,11 +85,8 @@ contract Exchange {
     }
 
     function transferFeesToOwner() external {
-        require(fees > 0 , "No fees to send");
         feesRegistry[address(this)] = 0;
-        uint amt = fees;
-        fees = 0;
-        usdc.transfer(msg.sender, amt);
+        usdc.transfer(msg.sender, fees);
     }
 
 }
@@ -101,8 +101,9 @@ contract INRC is ERC20 {
     USDC usdc;
     uint constant usdcInrExchangeRate = 80;
 
-    constructor(string memory tokenName, string memory tokenSymbol, address _usdc) ERC20(tokenName, tokenSymbol) {
-        exe = new Exchange(_usdc);
+    constructor(string memory tokenName, string memory tokenSymbol, address _usdc, address _owner) ERC20(tokenName, tokenSymbol) {
+        exe = new Exchange(_usdc, _owner);
+
         usdc = USDC(_usdc);
     }
 

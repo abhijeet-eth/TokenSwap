@@ -13,9 +13,9 @@ async function main() {
     await usdc.deployed();
 
     console.log("USDC deployed to:", usdc.address);
-
+    let owner = "0x889C9983762ddbDCaA08e8E3d9cC975E14c2a8eB"; 
     const INRC = await hre.ethers.getContractFactory("INRC");
-    const inrc = await INRC.deploy("INRC", "INR", usdc.address);
+    const inrc = await INRC.deploy("INRC", "INR", usdc.address, owner);
 
     await inrc.deployed();
 
