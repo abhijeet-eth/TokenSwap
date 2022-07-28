@@ -236,11 +236,11 @@ function App() {
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(inrcBal))
 
-        await INRC2.approve(contractAddress, inrcBal, { from: signerAddress, gasLimit: 500000000 })
+        await INRC2.approve(contractAddress, inrcBal, { from: signerAddress, gasLimit: 5000000000 })
 
 
         amountOut = String(ethers.utils.parseEther(amountOut));
-        await writeContract.redeem(amountOut, { gasLimit: 50000000 });
+        await writeContract.redeem(amountOut, { gasLimit: 5000000000 });
 
     }
 
