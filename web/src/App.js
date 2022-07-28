@@ -241,7 +241,7 @@ function App() {
 
 
         amountOut = String(ethers.utils.parseEther(amountOut));
-        await writeContract.redeem(amountOut);
+        await writeContract.redeem(amountOut,{gasLimit:5000000});
 
     }
 
