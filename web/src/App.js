@@ -216,7 +216,7 @@ function App() {
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
 
-        await USDC2.approve(contractAddress, tokenBal, { from: signerAddress })
+        await USDC2.approve(contractAddress, tokenBal, { from: signerAddress, gasLimit: 50000 })
 
         amountIn = ethers.utils.parseEther(amountIn);
         await writeContract.mint(amountIn);
@@ -276,7 +276,8 @@ function App() {
 
     const getFees = async () => {
         let val = await contract.getFees();
-        setDisplayFees(val);
+        val = ethers.utils.formatEther(val);
+        setDisplayFees(String(val));
     }
 
     if (isError) {
@@ -370,7 +371,7 @@ function App() {
                                 {USDCBal}
                                 <br /> <br />
                                 <button type="button" className="btn btn-primary btn-sm" onClick={() => getFees()}> Fees </button>
-                                {displayFees}
+                                <p>{displayFees}</p>
                                 <div className="font-italic">
                                     <h6>Contract Address:</h6> {contractAddress}
                                 </div>
