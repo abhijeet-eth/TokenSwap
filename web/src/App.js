@@ -296,7 +296,7 @@ function App() {
 
                         <div class="card" style={{ width: "18rem;" }}>
                             <div class="card-body">
-                                <h5 class="card-title">Mint</h5>
+                                <h5 class="card-title">Exchange</h5>
                                 <p class="card-text">Provide USDC and get INR token in 1:80 ratio</p>
                                 <form className="input" onSubmit={mintToken}>
                                     <input id='tokenIn' value={tokenInput} onChange={(event) => setTokenInput(event.target.value)} type='text' placeholder="Token amount " />
