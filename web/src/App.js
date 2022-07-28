@@ -259,6 +259,7 @@ function App() {
     }
 
     const USDC_Balance = async (addr) => {
+        console.log("addr",addr)
         const signerAddress = await metamaskSigner.getAddress();
         let val = await contract.USDC_BalanceOf(addr);
 
