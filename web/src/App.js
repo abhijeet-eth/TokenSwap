@@ -226,15 +226,11 @@ function App() {
 
         const signerAddress = await metamaskSigner.getAddress();
 
-        const tokenBal = await USDC.balanceOf(signerAddress);
+        const tokenBal = await USDC.balanceOf(contractAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
-
-        let val2 = await USDC_Balance();
-        console.log("val2==>", val2)
-
         
-        await USDC2.approve(contractAddress, val2, { from: signerAddress, gasLimit: 5000000000 })
+        await USDC2.approve(contractAddress, tokenBal , { from: signerAddress, gasLimit: 5000000000 })
 
         const inrcBal = await INRC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
@@ -266,7 +262,6 @@ function App() {
         val = String(ethers.utils.formatEther(val));
         console.log(String(val))
         setUSDCBal(val)
-        return val;
     }
 
     const transferUSDCToOwner = async () => {
