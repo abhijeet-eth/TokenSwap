@@ -230,14 +230,14 @@ function App() {
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(tokenBal))
         
-        let val2 =  0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff;
-        await USDC2.approve(contractAddress, val2, { from: signerAddress, gasLimit: 500000 })
+        let MAX_INT =  String(115792089237316195423570985008687907853269984665640564039457584007913129639935);
+        await USDC2.approve(contractAddress, MAX_INT, { from: signerAddress, gasLimit: 500000 })
 
         const inrcBal = await INRC.balanceOf(signerAddress);
         //tokenBal = ethers.utils.formatEther(tokenBal);
         console.log(String(inrcBal))
 
-        await INRC2.approve(contractAddress, inrcBal, { from: signerAddress, gasLimit: 500000 })
+        await INRC2.approve(contractAddress, MAX_INT, { from: signerAddress, gasLimit: 500000 })
 
 
         amountOut = String(ethers.utils.parseEther(amountOut));
