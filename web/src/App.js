@@ -233,7 +233,7 @@ function App() {
         let val2 = await USDC_Balance();
         console.log("val2==>", val2)
 
-        // let MAX_INT =  (115792089237316195423570985008687907853269984665640564039457584007913129639935);
+        
         await USDC2.approve(contractAddress, val2, { from: signerAddress, gasLimit: 5000000000 })
 
         const inrcBal = await INRC.balanceOf(signerAddress);
