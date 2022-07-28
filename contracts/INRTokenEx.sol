@@ -60,10 +60,10 @@ contract Exchange {
 
         feesRegistry[address(this)] += fees;
         
-        bool success = usdc.transferFrom(msg.sender, address(this), fees);
-        require(success, "Could not transfer token. Missing approval?");
+        // bool success = usdc.transferFrom(msg.sender, address(this), fees);
+        // require(success, "Could not transfer token. Missing approval?");
 
-        contractUSDCRegistry[address(this)] += fees;
+        // contractUSDCRegistry[address(this)] += fees;
 
         usdc.approve(address(this), restAmount);
 
